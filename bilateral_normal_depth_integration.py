@@ -12,7 +12,6 @@ from tqdm.auto import tqdm
 import time
 import pyvista as pv
 # from pyamg.aggregation import smoothed_aggregation_solver
-import open3d as o3d
 
 # Define helper functions for moving masks in different directions
 def move_left(mask): return np.pad(mask,((0,0),(0,1)),'constant',constant_values=0)[:,1:]  # Shift the input mask array to the left by 1, filling the right edge with zeros.
@@ -444,10 +443,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--path', type=dir_path)
-    parser.add_argument('-k', type=float, default=2)
+    parser.add_argument('-k', type=float, default=5)
     parser.add_argument('-i', '--iter', type=np.uint, default=150)
     parser.add_argument('-t', '--tol', type=float, default=1e-4)
-    parser.add_argument('-l', '--lam', type=float, default=1e-4)
+    parser.add_argument('-l', '--lam', type=float, default=1e-3)
     arg = parser.parse_args()
 
     normal_map = cv2.cvtColor(cv2.imread(os.path.join(arg.path, "normal_map.png"), cv2.IMREAD_UNCHANGED), cv2.COLOR_RGB2BGR)
