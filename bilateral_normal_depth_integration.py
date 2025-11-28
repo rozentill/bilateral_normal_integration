@@ -427,6 +427,25 @@ def bilateral_normal_integration(normal_map,
     return depth_map_out, surface, wu_map, wv_map, energy_list
 
 
+def create_sparse_depth_mask(depth_mask, pattern='checkerboard'):
+    """创建稀疏depth mask"""
+    sparse_mask = np.zeros_like(depth_mask, dtype=bool)
+    
+    if pattern == 'checkerboard':
+        # 棋盘格采样
+        sparse_mask[::2, ::2] = depth_mask[::2, ::2]
+    elif pattern == 'random':
+        # 随机采样50%
+        rng = np.random.default_rng(42)  # 固定随机种子
+        prob_mask = rng.random(depth_mask.shape) < 0.5
+        sparse_mask = depth_mask & prob_mask
+    elif pattern == 'grid':
+        # 网格采样
+        sparse_mask[::2, :] = depth_mask[::2, :]
+        sparse_mask[:, ::2] = depth_mask[:, ::2]
+    
+    return sparse_mask
+
 if __name__ == '__main__':
     import cv2
     import argparse, os
@@ -484,6 +503,11 @@ if __name__ == '__main__':
     # except:
     #     depth = None
 
+    #
+
+    # 在主函数中使用
+    sparse_depth_mask = create_sparse_depth_mask(depth_mask, pattern='checkerboard')
+    cv2.imwrite(os.path.join(arg.path, f"sparse_depth_mask.png"), sparse_depth_mask*255)
     depth_map, surface, wu_map, wv_map, energy_list = bilateral_normal_integration(normal_map=normal_map,
                                                                                     normal_mask=mask,
                                                                                     depth_map= depth,
