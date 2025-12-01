@@ -511,7 +511,7 @@ if __name__ == '__main__':
     depth_map, surface, wu_map, wv_map, energy_list = bilateral_normal_integration(normal_map=normal_map,
                                                                                     normal_mask=mask,
                                                                                     depth_map= depth,
-                                                                                    depth_mask = depth_mask,
+                                                                                    depth_mask = sparse_depth_mask,
                                                                                     k=arg.k,
                                                                                     K=None,
                                                                                     max_iter=arg.iter,
